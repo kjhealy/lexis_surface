@@ -5,7 +5,7 @@ library(showtext)
 showtext_auto()
 
 library(myriad)
-import_myriad()
+import_myriad_semi()
 
 theme_set(theme_myriad_semi())
 
@@ -38,7 +38,6 @@ france$age <- as.integer(recode(france$age, "110+" = "110"))
 france <- france %>% mutate(ratio = male / female,
                               pct_diff = ((male - female) / (male + female))*100,
                               bin_ratio = ntile(ratio, 100))
-
 
 ###--------------------------------------------------
 ### Britain
@@ -123,6 +122,26 @@ p_out <- p + geom_raster() +
 p_out
 ggsave("figures/france_women.png", p_out, height = 8, width = 12)
 ggsave("figures/france_women.pdf", p_out, height = 8, width = 12)
+
+
+p <- ggplot(subset(france, age < 101), aes(x = year, y = age, fill = ntile(female, 100)))
+p_out <- p + geom_tile() +
+    scale_fill_viridis_c(option = "A", direction = -1) +
+    scale_x_continuous(breaks = seq(1820, 2015, by = 25)) +
+    guides(fill = guide_legend(nrow = 1, title.position = "top", label.position = "bottom")) +
+    ylim(c(0, 100)) +
+    labs(x = "Year", y = "Age", fill = "Female Death Rate Percentile",
+         title = "Female Mortality Rates in France, 1816-2016",
+         subtitle = "Binned by percentile",
+#         subtitle = "After Schöley & Willekens (2017), 'Visualizing compositional data on the Lexis surface'",
+         caption = "@kjhealy / http://socviz.co. Data: Human Mortality Database.") +
+    theme(legend.position = "top",
+          legend.title = element_text(size = 8))
+
+p_out
+ggsave("figures/france_women_tile.png", p_out, height = 8, width = 12)
+ggsave("figures/france_women_tile.pdf", p_out, height = 8, width = 12)
+
 
 
 
