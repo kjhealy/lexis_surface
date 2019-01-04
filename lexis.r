@@ -71,7 +71,7 @@ ggsave("figures/britain_ratio2.pdf", p_out, height = 8, width = 10)
 
 
 
-p <- ggplot(subset(britain, age < 101), aes(x = year, y = age, fill = ntile(female)))
+p <- ggplot(subset(britain, age < 101), aes(x = year, y = age, fill = ntile(female, 100)))
 p_out <- p + geom_raster() +
     scale_fill_viridis_c(option = "A", direction = -1) +
     scale_x_continuous(breaks = seq(1845, 2015, by = 15)) +
